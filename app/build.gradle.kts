@@ -76,6 +76,7 @@ dependencies {
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
+    implementation(libs.androidx.paging.common.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -94,13 +95,12 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.navigation.compose)
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
 
     implementation(libs.material.v)
     implementation(libs.material.icons.v)
 
     implementation(libs.room)
+    implementation(libs.room.ktx)
     annotationProcessor(libs.room.compiler)
 //    kapt(libs.kapt)
 
@@ -111,7 +111,14 @@ dependencies {
     implementation(libs.json.serialization)
     kapt(libs.kapt)
 
-    implementation(libs.koin)
+//    implementation(libs.koin)
+    implementation(libs.koin.android)
+    implementation(libs.koin.core)
+    implementation(libs.koin.compose)
+
     implementation(libs.datastore)
     implementation(libs.datastore.core)
+
+    implementation(libs.androidx.paging.common.ktx)
+    implementation(libs.androidx.paging.compose)
 }

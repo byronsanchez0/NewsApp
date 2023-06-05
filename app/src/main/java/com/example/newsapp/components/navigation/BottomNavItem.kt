@@ -1,4 +1,4 @@
-package com.example.movieappcompose.navigation
+package com.example.newsapp.components.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search

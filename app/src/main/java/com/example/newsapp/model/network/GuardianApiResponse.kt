@@ -1,4 +1,5 @@
-package com.example.newsapp.models
+package com.example.newsapp.model.network
+
 
 import kotlinx.serialization.Serializable
 
@@ -6,7 +7,11 @@ import kotlinx.serialization.Serializable
 data class GuardianApiContent(
     val status:String,
     val total:String,
-    val results: List<NewsModel>
+    val startIndex: Int?,
+    val pageSize: Int?,
+    val currentPage: Int?,
+    val pages: Int?,
+    val results: List<Article>
 )
 
 @Serializable
