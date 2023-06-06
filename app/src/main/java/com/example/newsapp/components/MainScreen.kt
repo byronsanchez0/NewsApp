@@ -20,11 +20,6 @@ import com.example.newsapp.components.search.SearchUiState
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
-    val drawerState = rememberDrawerState(DrawerValue.Closed)
-    val scope = rememberCoroutineScope()
-    val context = LocalContext.current
-
-
 
     Scaffold(
         bottomBar = { BottomBar(navHostController = navController) },
@@ -36,8 +31,5 @@ fun MainScreen() {
                 contentPadding = it
             )
         }
-
     }
-
-
 }

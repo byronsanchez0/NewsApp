@@ -11,7 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.newsapp.components.details.DetailsScreen
 import com.example.newsapp.components.search.SearchScreen
-import com.example.newsapp.components.search.viewmodel.SearchViewModel
+import com.example.newsapp.components.search.SearchViewModel
 import com.example.newsapp.components.favorites.FavoritesScreen
 import com.example.newsapp.components.favorites.FavoritesViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -39,9 +39,12 @@ fun BottomNavGraph(
         composable("favorites") {
             FavoritesScreen(favoritesViewModel, navHostController)
         }
-        composable("details/{url}", arguments = listOf(navArgument("url"){type = NavType.StringType}))
+        composable(
+            "details/{url}",
+            arguments = listOf(navArgument("url") { type = NavType.StringType })
+        )
         { backStackEntry ->
-            val url = backStackEntry.arguments?.getString("url")?:""
+            val url = backStackEntry.arguments?.getString("url") ?: ""
             DetailsScreen(webUrl = url)
         }
     }

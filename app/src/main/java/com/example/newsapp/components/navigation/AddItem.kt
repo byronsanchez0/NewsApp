@@ -34,10 +34,10 @@ fun RowScope.AddItem(
             navController.navigate(screen.route)
         },
         colors = NavigationBarItemDefaults.colors(
-            selectedIconColor = MaterialTheme.colorScheme.primary,
+            selectedIconColor = MaterialTheme.colorScheme.secondary,
             unselectedIconColor = MaterialTheme.colorScheme.onBackground,
-            selectedTextColor = MaterialTheme.colorScheme.onPrimary,
-            indicatorColor = MaterialTheme.colorScheme.onPrimary
+            selectedTextColor = MaterialTheme.colorScheme.onSecondary,
+            indicatorColor = MaterialTheme.colorScheme.onSecondary
         )
     )
 }

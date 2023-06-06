@@ -1,4 +1,4 @@
-package com.example.newsapp.network
+package com.example.newsapp.data.remote
 
 import com.example.newsapp.BuildConfig
 import io.ktor.client.HttpClient
@@ -15,11 +15,9 @@ class GuardianApiServiceImpl(private val client: HttpClient) :
         filter: Filter
     ): GuardianApiResponse {
         val url =
-//            "https://content.guardianapis.com/search?q=$query&api-key=7de6160d-4534-4d15-9db6-dc0ea468d6e3&page=${page}&page-size=20"
             "https://content.guardianapis.com/search"
 
         return client.get(url) {
-
             parameter(QUERY, query)
             parameter(KEY, BuildConfig.GUARDIAN_API_KEY)
             parameter(SHOW_FIELDS, THUMBNAIL)
@@ -29,8 +27,6 @@ class GuardianApiServiceImpl(private val client: HttpClient) :
             filter.tag?.let { parameter(TAG, it) }
             filter.type?.let { parameter(TYPE, it) }
         }.body()
-//        println(data)
-//        return data
     }
 
     companion object {
@@ -45,5 +41,4 @@ class GuardianApiServiceImpl(private val client: HttpClient) :
         const val TAG = "tag"
         const val TYPE = "type"
     }
-
 }

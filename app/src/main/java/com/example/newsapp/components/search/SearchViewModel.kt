@@ -1,24 +1,22 @@
-package com.example.newsapp.components.search.viewmodel
+package com.example.newsapp.components.search
 
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.example.newsapp.ProviderDataStore
+import com.example.newsapp.data.datastore.ProviderDataStore
 import com.example.newsapp.data.local.repository.FavRepo
-import com.example.newsapp.components.search.SearchUiState
-import com.example.newsapp.components.search.viewmodel.SearchViewModel.FiltersNames.SECTION_CULTURE
-import com.example.newsapp.components.search.viewmodel.SearchViewModel.FiltersNames.SECTION_POLITICS
-import com.example.newsapp.components.search.viewmodel.SearchViewModel.FiltersNames.SECTION_TECHNOLOGY
-import com.example.newsapp.components.search.viewmodel.SearchViewModel.FiltersNames.TAG_ENVIRONMENT_RECYCLING
-import com.example.newsapp.components.search.viewmodel.SearchViewModel.FiltersNames.TAG_POLITICS_BLOG
-import com.example.newsapp.components.search.viewmodel.SearchViewModel.FiltersNames.TYPE_INTERACTIVE
-import com.example.newsapp.components.search.viewmodel.SearchViewModel.FiltersNames.TYPE_LIVE_BLOG
+import com.example.newsapp.components.search.SearchViewModel.FiltersNames.SECTION_CULTURE
+import com.example.newsapp.components.search.SearchViewModel.FiltersNames.SECTION_POLITICS
+import com.example.newsapp.components.search.SearchViewModel.FiltersNames.SECTION_TECHNOLOGY
+import com.example.newsapp.components.search.SearchViewModel.FiltersNames.TAG_ENVIRONMENT_RECYCLING
+import com.example.newsapp.components.search.SearchViewModel.FiltersNames.TAG_POLITICS_BLOG
+import com.example.newsapp.components.search.SearchViewModel.FiltersNames.TYPE_INTERACTIVE
+import com.example.newsapp.components.search.SearchViewModel.FiltersNames.TYPE_LIVE_BLOG
 import com.example.newsapp.data.local.entity.FavArticle
-import com.example.newsapp.model.data.remote.apirepository.NewsRepository
-import com.example.newsapp.network.Article
-import com.example.newsapp.network.Filter
+import com.example.newsapp.data.remote.apirepository.NewsRepository
+import com.example.newsapp.data.remote.Article
+import com.example.newsapp.data.remote.Filter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -74,7 +72,6 @@ class SearchViewModel(
                         if (favoritesIdsState.value.contains(article.id)) {
                             val favArticle = localRepository.getFavArticleById(article.id)
                             localRepository.deleteFavArticle(favArticle.itemId)
-
                         } else {
                             val newFavArticle = FavArticle(
                                 article.id,
@@ -88,7 +85,6 @@ class SearchViewModel(
                             localRepository.addFavArticle(newFavArticle)
                         }
                     }
-
                 }
             },
             favoritesIds = favoritesIdsState,
@@ -102,12 +98,10 @@ class SearchViewModel(
         val sections = listOf(SECTION_POLITICS, SECTION_TECHNOLOGY, SECTION_CULTURE)
         val types = listOf(TYPE_LIVE_BLOG, TYPE_INTERACTIVE)
         val tags = listOf(TAG_ENVIRONMENT_RECYCLING, TAG_POLITICS_BLOG)
-
         val sectionFilters =
             sections.map { section -> Filter("Section: $section", section = section) }
         val typeFilters = types.map { type -> Filter("Type: $type", type = type) }
         val tagFilters = tags.map { tag -> Filter("Tag: $tag", tag = tag) }
-
         return sectionFilters + typeFilters + tagFilters
     }
 

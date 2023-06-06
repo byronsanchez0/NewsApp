@@ -28,6 +28,5 @@ fun DetailsScreen(webUrl: String) {
                 it.loadUrl(webUrl)
             }
         )
-
     }
 }

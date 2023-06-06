@@ -1,12 +1,10 @@
-package com.example.newsapp.model.data.remote.paging
+package com.example.newsapp.data.remote.pagination
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import coil.network.HttpException
-import com.example.newsapp.network.Article
-import com.example.newsapp.network.Filter
-import com.example.newsapp.network.GuardianApiService
-import java.io.IOException
+import com.example.newsapp.data.remote.Article
+import com.example.newsapp.data.remote.Filter
+import com.example.newsapp.data.remote.GuardianApiService
 
 class ArticlePagingSource(
     private val apiService: GuardianApiService,
@@ -30,9 +28,9 @@ class ArticlePagingSource(
                 filter = filter
             )
             val data = response.response?.results
-            val list = response.response?.results?: listOf()
+            val list = response.response?.results ?: listOf()
             LoadResult.Page(
-                data = data?: listOf(),
+                data = data ?: listOf(),
                 prevKey = if (pagerNumber == 1) null else pagerNumber.minus(1),
                 nextKey = if (list.isEmpty()) null else pagerNumber.plus(1)
             )
@@ -40,5 +38,4 @@ class ArticlePagingSource(
             LoadResult.Error(e)
         }
     }
-
 }

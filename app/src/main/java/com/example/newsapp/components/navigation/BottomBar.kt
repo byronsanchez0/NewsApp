@@ -13,12 +13,11 @@ fun BottomBar(navHostController: NavHostController) {
         BottomNavItem.SearchMovie,
         BottomNavItem.Favorites
     )
-
     val navBackStackEntry by navHostController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
     NavigationBar(
-        containerColor = MaterialTheme.colorScheme.primary
+        containerColor = MaterialTheme.colorScheme.secondary
     ) {
         screens.forEach { screen ->
             AddItem(

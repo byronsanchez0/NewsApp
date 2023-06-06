@@ -1,6 +1,7 @@
 package com.example.newsapp.components.favorites
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +15,7 @@ import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -49,7 +51,7 @@ fun FavoritesScreen(favoritesViewModel: FavoritesViewModel, navHostController: N
         ) { page ->
             Card(
                 modifier = Modifier
-                    .size(400.dp)
+                    .size(width = 375.dp, height = 425.dp)
                     .padding(16.dp)
                     .graphicsLayer {
                         val pageOffset =
@@ -66,17 +68,23 @@ fun FavoritesScreen(favoritesViewModel: FavoritesViewModel, navHostController: N
                     }
             ) {
                 val favArticle = favoritesFromViewModel[page]
-                Item(favArticle = favArticle, favoritesViewModel, navHostController )
+                Item(favArticle = favArticle, favoritesViewModel, navHostController)
             }
         }
     }
 }
 
 @Composable
-fun Item(favArticle: FavArticle, favoritesViewModel: FavoritesViewModel, navHostController: NavHostController) {
+fun Item(
+    favArticle: FavArticle,
+    favoritesViewModel: FavoritesViewModel,
+    navHostController: NavHostController
+) {
     val url = URLEncoder.encode(favArticle.webUrl, "UTF-8")
     val favUiState by favoritesViewModel.uiState.collectAsState()
-    Box {
+    Box(
+        modifier = Modifier.background(MaterialTheme.colorScheme.onTertiary)
+    ) {
         Image(
             painter = rememberAsyncImagePainter(favArticle.fields),
             contentDescription = "Movie Poster",
@@ -86,17 +94,23 @@ fun Item(favArticle: FavArticle, favoritesViewModel: FavoritesViewModel, navHost
         )
         Text(
             text = favArticle?.title ?: "",
+            style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier
-                .padding(8.dp),
-            softWrap = true
-        )
-        FloatingActionButton(onClick = { favUiState.deleteFavArticle(favArticle.itemId) },
+                .padding(15.dp),
+            softWrap = true,
+
+            )
+        FloatingActionButton(
+            onClick = { favUiState.deleteFavArticle(favArticle.itemId) },
+            containerColor = MaterialTheme.colorScheme.onSecondary,
             content = {
-                Icon(imageVector = Icons.Outlined.Delete, contentDescription = "Delete")
+                Icon(
+                    imageVector = Icons.Outlined.Delete,
+                    tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                    contentDescription = "Delete"
+                )
             },
             modifier = Modifier.align(Alignment.BottomEnd)
         )
     }
-
 }
-

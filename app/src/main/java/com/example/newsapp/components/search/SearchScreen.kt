@@ -1,6 +1,7 @@
 package com.example.newsapp.components.search
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,6 +25,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -43,8 +45,7 @@ import androidx.paging.compose.itemContentType
 import androidx.paging.compose.itemKey
 import coil.compose.rememberAsyncImagePainter
 import com.example.newsapp.R
-import com.example.newsapp.components.search.viewmodel.SearchViewModel
-import com.example.newsapp.network.Filter
+import com.example.newsapp.data.remote.Filter
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,15 +61,11 @@ fun SearchScreen(
     val query = remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
     val markedFilter = remember { mutableStateOf(Filter("")) }
-
     val saveMarkedFilter = searchUiState.saveSelectedFilter
     val selectedFilter by searchUiState.selectedFilter.collectAsState(initial = Filter(""))
-
     val filters = remember { searchViewModel.filtersGenerator() }
     val filtersList = remember { mutableStateOf(false) }
     val favoritesIdsState by searchUiState.favoritesIds.collectAsState()
-
-
 
     Column(
         modifier = Modifier
@@ -125,7 +122,6 @@ fun SearchScreen(
                                 saveMarkedFilter(filter)
                                 filtersList.value = false
                                 scope.launch { searchValue(query.value, filter) }
-
                             }, text = {
                                 Text(text = filter.filterName)
                             })
@@ -133,7 +129,6 @@ fun SearchScreen(
                 }
             }
         }
-
 
         Box(
             modifier = Modifier.fillMaxSize()
@@ -162,11 +157,23 @@ fun SearchScreen(
                                 contentScale = ContentScale.FillWidth
                             )
                             if (article != null)
-                                Row {
+                                Row(
+                                    modifier = Modifier.background(MaterialTheme.colorScheme.onTertiary)
+                                ) {
                                     Text(
                                         text = article?.webTitle ?: "",
+                                        style = MaterialTheme.typography.bodyLarge,
                                         modifier = Modifier
                                             .padding(8.dp)
+                                            .weight(1f),
+                                        softWrap = true
+                                    )
+                                    Text(
+                                        text = article?.sectionName ?: "",
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        modifier = Modifier
+                                            .padding(8.dp)
+                                            .align(Alignment.CenterVertically)
                                             .weight(1f),
                                         softWrap = true
                                     )
@@ -197,6 +204,5 @@ fun SearchScreen(
                 }
             }
         }
-
     }
 }

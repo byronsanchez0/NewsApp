@@ -1,7 +1,6 @@
 package com.example.newsapp.data.local.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -25,6 +24,6 @@ interface FavArticleDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertItem(item: FavArticle)
 
-    @Query ("DELETE FROM favorite WHERE itemId = :id")
+    @Query("DELETE FROM favorite WHERE itemId = :id")
     suspend fun deleteItem(id: String)
 }

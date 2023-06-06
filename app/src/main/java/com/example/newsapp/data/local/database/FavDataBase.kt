@@ -16,5 +16,6 @@ abstract class FavDataBase : RoomDatabase() {
                 .build()
         }
     }
+
     abstract fun favArticleDao(): FavArticleDao
 }

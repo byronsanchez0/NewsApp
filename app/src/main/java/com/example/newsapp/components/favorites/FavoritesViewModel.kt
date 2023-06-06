@@ -2,7 +2,6 @@ package com.example.newsapp.components.favorites
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.newsapp.data.local.entity.FavArticle
 import com.example.newsapp.data.local.repository.FavRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,8 +32,4 @@ class FavoritesViewModel(private val localRepository: FavRepo) : ViewModel() {
             localRepository.deleteFavArticle(id)
         }
     }
-
-
-
-
 }

@@ -5,7 +5,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.ui.graphics.vector.ImageVector
 
-sealed class BottomNavItem(var icon: ImageVector, var route: String){
+sealed class BottomNavItem(var icon: ImageVector, var route: String) {
     object SearchMovie : BottomNavItem(
         Icons.Filled.Search,
         "moviesearchscreen"
@@ -15,5 +15,4 @@ sealed class BottomNavItem(var icon: ImageVector, var route: String){
         Icons.Outlined.Favorite,
         "favorites"
     )
-
 }

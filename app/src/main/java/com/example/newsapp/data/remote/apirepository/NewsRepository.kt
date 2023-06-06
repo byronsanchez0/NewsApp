@@ -1,9 +1,9 @@
-package com.example.newsapp.model.data.remote.apirepository
+package com.example.newsapp.data.remote.apirepository
 
 
 import androidx.paging.PagingData
-import com.example.newsapp.network.Article
-import com.example.newsapp.network.Filter
+import com.example.newsapp.data.remote.Article
+import com.example.newsapp.data.remote.Filter
 import kotlinx.coroutines.flow.Flow
 
 interface NewsRepository {
