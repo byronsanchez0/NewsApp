@@ -1,6 +1,7 @@
 package com.example.newsapp.components.favorites
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,16 +22,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
+import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import com.example.newsapp.components.search.SearchUiState
 import com.example.newsapp.data.local.entity.FavArticle
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import java.net.URLEncoder
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun FavoritesScreen(favoritesViewModel: FavoritesViewModel) {
-
+fun FavoritesScreen(favoritesViewModel: FavoritesViewModel, navHostController: NavHostController) {
 
     val favoritesFromViewModel by favoritesViewModel.favorites.collectAsState()
     val pagerState = rememberPagerState()
@@ -40,7 +43,11 @@ fun FavoritesScreen(favoritesViewModel: FavoritesViewModel) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        HorizontalPager(count = favoritesFromViewModel.size, state = pagerState, itemSpacing = 5.dp) { page ->
+        HorizontalPager(
+            count = favoritesFromViewModel.size,
+            state = pagerState,
+            itemSpacing = 5.dp
+        ) { page ->
             Card(
                 modifier = Modifier
                     .size(400.dp)
@@ -60,21 +67,25 @@ fun FavoritesScreen(favoritesViewModel: FavoritesViewModel) {
                     }
             ) {
                 val favArticle = favoritesFromViewModel[page]
-                Item(favArticle = favArticle, delete = {})
+                Item(favArticle = favArticle, favoritesViewModel, navHostController )
             }
         }
     }
 }
 
 @Composable
-fun Item(favArticle: FavArticle,delete:(String) -> Unit) {
+fun Item(favArticle: FavArticle, favoritesViewModel: FavoritesViewModel, navHostController: NavHostController) {
+    val url = URLEncoder.encode(favArticle.webUrl, "UTF-8")
+    val favUiState by favoritesViewModel.uiState.collectAsState()
     Box {
-//        Image(
-//            painter = rememberAsyncImagePainter(favArticle.thumbnail),
-//            contentDescription = "Movie Poster",
-//            modifier = Modifier.fillMaxSize()
-//        )
-        FloatingActionButton(onClick = { delete(favArticle.itemId) },
+        Image(
+            painter = rememberAsyncImagePainter(favArticle.fields),
+            contentDescription = "Movie Poster",
+            modifier = Modifier
+                .fillMaxSize()
+                .clickable { navHostController.navigate("details/${url}") }
+        )
+        FloatingActionButton(onClick = { favUiState.deleteFavArticle(favArticle.itemId) },
             content = {
                 Icon(imageVector = Icons.Outlined.Delete, contentDescription = "Delete")
             }

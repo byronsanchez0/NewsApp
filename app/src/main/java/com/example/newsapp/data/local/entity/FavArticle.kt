@@ -25,8 +25,8 @@ data class FavArticle(
     @ColumnInfo(name = "sectionName")
     val sectionName: String?,
 
-    @ColumnInfo("thumbnail")
-    val thumbnail: String?
+    @ColumnInfo("thumbnail")@SerialName("thumbnail")
+    val fields: String?
 
 
 )

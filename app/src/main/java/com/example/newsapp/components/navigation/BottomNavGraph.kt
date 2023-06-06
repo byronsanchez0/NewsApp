@@ -5,8 +5,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import com.example.newsapp.components.details.DetailsScreen
 import com.example.newsapp.components.search.SearchScreen
 import com.example.newsapp.components.search.viewmodel.SearchViewModel
 import com.example.newsapp.components.favorites.FavoritesScreen
@@ -34,7 +37,12 @@ fun BottomNavGraph(
             )
         }
         composable("favorites") {
-            FavoritesScreen(favoritesViewModel)
+            FavoritesScreen(favoritesViewModel, navHostController)
+        }
+        composable("details/{url}", arguments = listOf(navArgument("url"){type = NavType.StringType}))
+        { backStackEntry ->
+            val url = backStackEntry.arguments?.getString("url")?:""
+            DetailsScreen(webUrl = url)
         }
     }
 }

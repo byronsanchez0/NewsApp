@@ -27,8 +27,8 @@ data class Article(
     @SerialName("apiUrl")
     val apiUrl: String,
 
-//    @SerialName("fields")
-//    val fields:Fields
+    @SerialName("fields")
+    val fields:Fields
 )
 @Serializable
 data class Fields(

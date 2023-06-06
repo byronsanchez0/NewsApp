@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.example.newsapp.ProviderDataStore
 import com.example.newsapp.data.local.repository.FavRepo
 import com.example.newsapp.components.search.SearchUiState
 import com.example.newsapp.components.search.viewmodel.SearchViewModel.FiltersNames.SECTION_CULTURE
@@ -31,7 +32,8 @@ import kotlinx.coroutines.withContext
 
 class SearchViewModel(
     private val localRepository: FavRepo,
-    private val guardianRepository: NewsRepository
+    private val guardianRepository: NewsRepository,
+    private val dataStore: ProviderDataStore
 ) : ViewModel() {
 
     private val isLoading = MutableStateFlow(false)
@@ -42,6 +44,7 @@ class SearchViewModel(
         emptyList()
     )
     private var filters = MutableStateFlow(Filter(""))
+    val filterPicked: Flow<Filter> = dataStore.getSelectedFilter()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val articlesFlow: Flow<PagingData<Article>> = combine(searchQuery, filters) { query, filter ->
@@ -50,9 +53,15 @@ class SearchViewModel(
         guardianRepository.searchArticles(query, filter)
     }.cachedIn(viewModelScope)
 
-    fun searchNews(query: String, filter: Filter) {
+    private fun searchNews(query: String, filter: Filter) {
         searchQuery.value = query
         filters.value = filter
+    }
+
+    private fun saveFilterPicked(filter: Filter) {
+        viewModelScope.launch {
+            dataStore.saveSelectedFilter(filter)
+        }
     }
 
     val uiState = MutableStateFlow(
@@ -62,10 +71,10 @@ class SearchViewModel(
             searchNews = ::searchNews,
             onFavoriteClick = { article ->
                 viewModelScope.launch() {
-                    withContext(Dispatchers.IO){
+                    withContext(Dispatchers.IO) {
                         if (favoritesIdsState.value.contains(article.id)) {
                             val favArticle = localRepository.getFavArticleById(article.id)
-                            localRepository.deleteFavArticle(favArticle)
+                            localRepository.deleteFavArticle(favArticle.itemId)
 
                         } else {
                             val newFavArticle = FavArticle(
@@ -75,8 +84,7 @@ class SearchViewModel(
                                 article.type,
                                 article.webUrl,
                                 article.sectionName,
-                                ""
-//                                article.fields.thumbnail
+                                article.fields.thumbnail
                             )
                             localRepository.addFavArticle(newFavArticle)
                         }
@@ -84,8 +92,10 @@ class SearchViewModel(
 
                 }
             },
-            favoritesIds = favoritesIdsState
-        )
+            favoritesIds = favoritesIdsState,
+            selectedFilter = filterPicked,
+            saveSelectedFilter = ::saveFilterPicked
+            )
     )
 
 

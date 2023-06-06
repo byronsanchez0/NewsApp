@@ -15,4 +15,5 @@ sealed class BottomNavItem(var icon: ImageVector, var route: String){
         Icons.Outlined.Favorite,
         "favorites"
     )
+
 }

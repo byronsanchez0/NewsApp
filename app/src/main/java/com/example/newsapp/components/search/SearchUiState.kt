@@ -16,5 +16,7 @@ data class SearchUiState(
     val onFavoriteClick: (Article) -> Unit,
     val news: List<Article> = emptyList(),
     var isLoading: Boolean = false,
-    val searchNews: (String,Filter) -> Unit
+    val searchNews: (String,Filter) -> Unit,
+    val saveSelectedFilter: (Filter) -> Unit,
+    val selectedFilter: Flow<Filter>
 )

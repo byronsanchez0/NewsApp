@@ -35,7 +35,7 @@ ktorClientCore = "2.3.0"
 json-serialization = "1.5.0"
 
 koin-version = "3.4.0"
-datastore-version = "1.0.0"
+datastorePreferences = "1.0.0"
 paging_version = "3.1.1"
 
 
@@ -88,8 +88,10 @@ ktor-server-cors = { module = "io.ktor:ktor-server-cors", version.ref = "ktorCli
 
 json-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "json-serialization" }
 
-datastore = {group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore-version"}
-datastore-core = {group = "androidx.datastore", name = "datastore-preferences-core", version.ref = "datastore-version"}
+androidx-datastore-preferences-core = { module = "androidx.datastore:datastore-preferences-core", version.ref = "datastorePreferences" }
+androidx-datastore-preferences-rxjava2 = { module = "androidx.datastore:datastore-preferences-rxjava2", version.ref = "datastorePreferences" }
+androidx-datastore-preferences-rxjava3 = { module = "androidx.datastore:datastore-preferences-rxjava3", version.ref = "datastorePreferences" }
+datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin-version" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin-version" }
@@ -114,4 +116,13 @@ ktor = [
     "ktor-client-serialization",
     "ktor-serialization-kotlinx-json",
     "ktor-server-cors"]
+
+datastore = [
+    "datastore-preferences",
+    "androidx-datastore-preferences-core",
+    "androidx-datastore-preferences-rxjava2",
+    "androidx-datastore-preferences-rxjava3"
+]
+
+
 

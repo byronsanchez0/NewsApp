@@ -46,7 +46,6 @@ import com.example.newsapp.R
 import com.example.newsapp.components.search.viewmodel.SearchViewModel
 import com.example.newsapp.network.Filter
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.getViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,11 +57,13 @@ fun SearchScreen(
     val searchValue = searchUiState.searchNews
     val articlesProvider = searchViewModel.articlesFlow
     val articles = articlesProvider?.collectAsLazyPagingItems()
-//    val searchViewModel : SearchViewModel = getViewModel()
-//    val searchNew = searchUiState.searchNews
     val query = remember { mutableStateOf("") }
     val scope = rememberCoroutineScope()
     val markedFilter = remember { mutableStateOf(Filter("")) }
+
+    val saveMarkedFilter = searchUiState.saveSelectedFilter
+    val selectedFilter by searchUiState.selectedFilter.collectAsState(initial = Filter(""))
+
     val filters = remember { searchViewModel.filtersGenerator() }
     val filtersList = remember { mutableStateOf(false) }
     val favoritesIdsState by searchUiState.favoritesIds.collectAsState()
@@ -111,7 +112,7 @@ fun SearchScreen(
             Spacer(modifier = Modifier.width(8.dp))
             Box {
                 Button(onClick = { filtersList.value = !filtersList.value }) {
-                    Text(markedFilter.value.filterName.ifEmpty { stringResource(R.string.select_a_filter) })
+                    Text(selectedFilter.filterName.ifEmpty { stringResource(R.string.select_a_filter) })
                 }
                 DropdownMenu(
                     expanded = filtersList.value,
@@ -119,14 +120,15 @@ fun SearchScreen(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     filters.forEach { filter ->
-                        DropdownMenuItem(onClick = {
-                            markedFilter.value = filter
-                            filtersList.value = false
-                            scope.launch { searchValue(query.value, filter) }
+                        DropdownMenuItem(
+                            onClick = {
+                                saveMarkedFilter(filter)
+                                filtersList.value = false
+                                scope.launch { searchValue(query.value, filter) }
 
-                        }, text = {
-                            Text(text = filter.filterName)
-                        })
+                            }, text = {
+                                Text(text = filter.filterName)
+                            })
                     }
                 }
             }
@@ -149,16 +151,16 @@ fun SearchScreen(
                             contentType = articles.itemContentType(),
                         ) { index ->
                             val article = articles[index]
-//                            val painter = rememberAsyncImagePainter(article?.fields?.thumbnail)
-//                            Image(
-//                                painter = painter,
-//                                contentDescription = stringResource(R.string.new_image),
-//                                modifier = Modifier
-//                                    .height(100.dp)
-//                                    .width(100.dp)
-//                                    .padding(end = 16.dp),
-//                                contentScale = ContentScale.Crop
-//                            )
+                            val painter = rememberAsyncImagePainter(article?.fields?.thumbnail)
+                            Image(
+                                painter = painter,
+                                contentDescription = stringResource(R.string.new_image),
+                                modifier = Modifier
+                                    .height(100.dp)
+                                    .width(100.dp)
+                                    .padding(end = 16.dp),
+                                contentScale = ContentScale.Crop
+                            )
                             if (article != null)
 
                                 Row {

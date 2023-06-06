@@ -1,3 +1,4 @@
+import org.gradle.internal.impldep.com.google.api.client.util.store.DataStore
 import org.jetbrains.kotlin.kapt3.base.Kapt
 import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
 
@@ -116,8 +117,7 @@ dependencies {
     implementation(libs.koin.core)
     implementation(libs.koin.compose)
 
-    implementation(libs.datastore)
-    implementation(libs.datastore.core)
+    implementation(libs.bundles.datastore)
 
     implementation(libs.androidx.paging.common.ktx)
     implementation(libs.androidx.paging.compose)

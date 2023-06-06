@@ -21,8 +21,8 @@ class FavRepo (context: Context) {
     fun getFavArticleById(userId: String): FavArticle {
         return favArticleDao.getItemById(userId)
     }
-    suspend fun deleteFavArticle(favArticle: FavArticle) {
-        favArticleDao.deleteItem(favArticle)
+    suspend fun deleteFavArticle(id: String) {
+        favArticleDao.deleteItem(id)
     }
 
     fun getAllIds(): Flow<List<String>>{

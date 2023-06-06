@@ -25,6 +25,6 @@ interface FavArticleDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertItem(item: FavArticle)
 
-    @Delete
-    suspend fun deleteItem(item: FavArticle)
+    @Query ("DELETE FROM favorite WHERE itemId = :id")
+    suspend fun deleteItem(id: String)
 }
