@@ -1,9 +1,9 @@
-package com.example.newsapp
+package com.example.newsapp.data.local.repository
 
 import android.content.Context
-import com.example.newsapp.dao.FavArticleDao
-import com.example.newsapp.database.FavDataBase
-import com.example.newsapp.entity.FavArticle
+import com.example.newsapp.data.local.dao.FavArticleDao
+import com.example.newsapp.data.local.database.FavDataBase
+import com.example.newsapp.data.local.entity.FavArticle
 import kotlinx.coroutines.flow.Flow
 
 class FavRepo (context: Context) {
@@ -11,7 +11,14 @@ class FavRepo (context: Context) {
     suspend fun addFavArticle(favMovie: FavArticle) {
         favArticleDao.insertItem(favMovie)
     }
-    fun getFavArticle(userId: String): Flow<FavArticle> {
+//    fun getFavArticle(userId: String): <FavArticle> {
+//        return favArticleDao.getItemById(userId)
+//    }
+
+    fun getAllFav():Flow<List<FavArticle>>{
+        return favArticleDao.getAll()
+    }
+    fun getFavArticleById(userId: String): FavArticle {
         return favArticleDao.getItemById(userId)
     }
     suspend fun deleteFavArticle(favArticle: FavArticle) {

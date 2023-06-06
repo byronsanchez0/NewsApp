@@ -1,14 +1,14 @@
 package com.example.newsapp.modules
 
-import com.example.newsapp.FavRepo
+import com.example.newsapp.data.local.repository.FavRepo
 import com.example.newsapp.components.search.viewmodel.SearchViewModel
-import com.example.newsapp.model.network.GuardianApiService
-import com.example.newsapp.model.network.GuardianApiServiceImpl
-import com.example.newsapp.model.network.KtorClient
-import com.example.newsapp.model.repository.NewsRepository
-import com.example.newsapp.model.repository.NewsRepositoryImpl
+import com.example.newsapp.components.favorites.FavoritesViewModel
+import com.example.newsapp.network.GuardianApiServiceImpl
+import com.example.newsapp.network.KtorClient
+import com.example.newsapp.model.data.remote.apirepository.NewsRepository
+import com.example.newsapp.model.data.remote.apirepository.NewsRepositoryImpl
+import com.example.newsapp.network.GuardianApiService
 import org.koin.android.ext.koin.androidContext
-import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
 
@@ -23,4 +23,7 @@ val appModule = module {
 //    viewModel { SearchViewModel(get(), get()) }
 
     viewModelOf(::SearchViewModel)
+    viewModelOf(::FavoritesViewModel)
+//    viewModelOf(::Fav)
+
 }

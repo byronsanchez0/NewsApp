@@ -1,11 +1,12 @@
-package com.example.newsapp.entity
+package com.example.newsapp.data.local.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.serialization.SerialName
 
 @Entity(tableName = "favorite")
-data class FavArticle (
+data class FavArticle(
     @PrimaryKey
     val itemId: String,
 
@@ -22,5 +23,10 @@ data class FavArticle (
     val webUrl: String?,
 
     @ColumnInfo(name = "sectionName")
-    val sectionName: String?
+    val sectionName: String?,
+
+    @ColumnInfo("thumbnail")
+    val thumbnail: String?
+
+
 )

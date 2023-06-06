@@ -1,4 +1,4 @@
-package com.example.newsapp.model.network
+package com.example.newsapp.network
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -25,6 +25,25 @@ data class Article(
     val webUrl: String,
 
     @SerialName("apiUrl")
-    val apiUrl: String
+    val apiUrl: String,
+
+//    @SerialName("fields")
+//    val fields:Fields
 )
+@Serializable
+data class Fields(
+    @SerialName("thumbnail")
+    val thumbnail: String
+)
+
+@Serializable
+data class Filter(
+    val filterName: String,
+    val section: String? = null,
+    val tag: String? = null,
+    val type: String? = null
+)
+
+
+
 

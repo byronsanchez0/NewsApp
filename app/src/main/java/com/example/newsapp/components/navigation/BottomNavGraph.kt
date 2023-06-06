@@ -2,13 +2,15 @@ package com.example.newsapp.components.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.newsapp.components.search.SearchScreen
 import com.example.newsapp.components.search.viewmodel.SearchViewModel
-import com.example.newsapp.components.FavoritesScreen
-import org.koin.androidx.compose.getViewModel
+import com.example.newsapp.components.favorites.FavoritesScreen
+import com.example.newsapp.components.favorites.FavoritesViewModel
 import org.koin.androidx.compose.koinViewModel
 
 
@@ -18,18 +20,21 @@ fun BottomNavGraph(
     contentPadding: PaddingValues
 ) {
 
-    val viewModel: SearchViewModel = koinViewModel()
+    val searchViewModel: SearchViewModel = koinViewModel()
+    val favoritesViewModel: FavoritesViewModel = koinViewModel()
+    val uiState by searchViewModel.uiState.collectAsState()
     NavHost(
         navController = navHostController,
         startDestination = "moviesearchscreen"
     ) {
         composable("moviesearchscreen") {
             SearchScreen(
-                searchUiState = viewModel.searchUiState,
+                searchUiState = uiState,
+                searchViewModel
             )
         }
         composable("favorites") {
-            FavoritesScreen()
+            FavoritesScreen(favoritesViewModel)
         }
     }
 }

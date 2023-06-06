@@ -14,6 +14,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.rememberNavController
 import com.example.newsapp.components.navigation.BottomBar
 import com.example.newsapp.components.navigation.BottomNavGraph
+import com.example.newsapp.components.search.SearchUiState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,10 +41,3 @@ fun MainScreen() {
 
 
 }
-
-
-
-
-
-
-

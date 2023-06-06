@@ -1,14 +1,33 @@
 package com.example.newsapp.components.search.viewmodel
 
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.newsapp.FavRepo
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.example.newsapp.data.local.repository.FavRepo
 import com.example.newsapp.components.search.SearchUiState
-import com.example.newsapp.model.repository.NewsRepository
+import com.example.newsapp.components.search.viewmodel.SearchViewModel.FiltersNames.SECTION_CULTURE
+import com.example.newsapp.components.search.viewmodel.SearchViewModel.FiltersNames.SECTION_POLITICS
+import com.example.newsapp.components.search.viewmodel.SearchViewModel.FiltersNames.SECTION_TECHNOLOGY
+import com.example.newsapp.components.search.viewmodel.SearchViewModel.FiltersNames.TAG_ENVIRONMENT_RECYCLING
+import com.example.newsapp.components.search.viewmodel.SearchViewModel.FiltersNames.TAG_POLITICS_BLOG
+import com.example.newsapp.components.search.viewmodel.SearchViewModel.FiltersNames.TYPE_INTERACTIVE
+import com.example.newsapp.components.search.viewmodel.SearchViewModel.FiltersNames.TYPE_LIVE_BLOG
+import com.example.newsapp.data.local.entity.FavArticle
+import com.example.newsapp.model.data.remote.apirepository.NewsRepository
+import com.example.newsapp.network.Article
+import com.example.newsapp.network.Filter
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SearchViewModel(
     private val localRepository: FavRepo,
@@ -18,67 +37,78 @@ class SearchViewModel(
     private val isLoading = MutableStateFlow(false)
     private val searchQuery = MutableStateFlow("")
     private val favoritesIds = localRepository.getAllIds()
+    private val favoritesIdsState = favoritesIds.stateIn(
+        viewModelScope, SharingStarted.Lazily,
+        emptyList()
+    )
+    private var filters = MutableStateFlow(Filter(""))
 
-    private val paginatedArticlesProvider = combine(
-        searchQuery,
-        favoritesIds,
-    ) { searchQuery, ids, ->
-        if(searchQuery.isNotEmpty()){
-            isLoading.value = false
-            guardianRepository.searchArticles(
-                query = searchQuery
-            )
-        }else {
-            null
-        }
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val articlesFlow: Flow<PagingData<Article>> = combine(searchQuery, filters) { query, filter ->
+        Pair(query, filter)
+    }.flatMapLatest { (query, filter) ->
+        guardianRepository.searchArticles(query, filter)
+    }.cachedIn(viewModelScope)
 
-    }.stateIn(viewModelScope, SharingStarted.Lazily, null)
+    fun searchNews(query: String, filter: Filter) {
+        searchQuery.value = query
+        filters.value = filter
+    }
 
-    val searchUiState = SearchUiState(
-        searchQuery = searchQuery,
-        isLoading = isLoading,
-        articlesProvider = paginatedArticlesProvider,
-        favoritesIds = favoritesIds.stateIn(
-            viewModelScope, SharingStarted.Lazily,
-            emptyList()
-        ),
-        onQueryChange = { query ->
-            isLoading.value = true
-            searchQuery.value = if (query.length == 1) query.trim() else query
-            isLoading.value = false
-        },
-        onFavoriteClick = { article ->
-            println("Le diste favorito")
-        }
+    val uiState = MutableStateFlow(
+        SearchUiState(
+            news = emptyList(),
+            isLoading = false,
+            searchNews = ::searchNews,
+            onFavoriteClick = { article ->
+                viewModelScope.launch() {
+                    withContext(Dispatchers.IO){
+                        if (favoritesIdsState.value.contains(article.id)) {
+                            val favArticle = localRepository.getFavArticleById(article.id)
+                            localRepository.deleteFavArticle(favArticle)
+
+                        } else {
+                            val newFavArticle = FavArticle(
+                                article.id,
+                                article.webTitle,
+                                article.webPublicationDate,
+                                article.type,
+                                article.webUrl,
+                                article.sectionName,
+                                ""
+//                                article.fields.thumbnail
+                            )
+                            localRepository.addFavArticle(newFavArticle)
+                        }
+                    }
+
+                }
+            },
+            favoritesIds = favoritesIdsState
+        )
     )
 
 
-//    combine(
-//        searchQuery,
-//    ) { searchQuery ->
-//        if (searchQuery.isNotEmpty()) {
-//            isLoading.value = false
-//            guardianRepository.searchArticles(
-//                query = searchQuery
-//            )
-//        }
-//    }.stateIn(viewModelScope, SharingStarted.Lazily, null)
+    fun filtersGenerator(): List<Filter> {
+        val sections = listOf(SECTION_POLITICS, SECTION_TECHNOLOGY, SECTION_CULTURE)
+        val types = listOf(TYPE_LIVE_BLOG, TYPE_INTERACTIVE)
+        val tags = listOf(TAG_ENVIRONMENT_RECYCLING, TAG_POLITICS_BLOG)
 
-//    private val favoritesIds = localRepository.getAllIds()
-//
-//    private val _uiState = MutableStateFlow(
-//        SearchUiState(
-//            articles = emptyList(),
-//            isLoading = false,
-//        )
-//    )
-//    val uiState = _uiState.asStateFlow()
-//
-//    fun searchArticles(query: String) {
-//        viewModelScope.launch {
-//            _uiState.value = _uiState.value.copy(isLoading = true)
-//            val response = guardianRepository.searchArticles(query)
-//            _uiState.value = SearchUiState(articles = response.response.results, isLoading = false)
-//        }
-//    }
+        val sectionFilters =
+            sections.map { section -> Filter("Section: $section", section = section) }
+        val typeFilters = types.map { type -> Filter("Type: $type", type = type) }
+        val tagFilters = tags.map { tag -> Filter("Tag: $tag", tag = tag) }
+
+        return sectionFilters + typeFilters + tagFilters
+    }
+
+    object FiltersNames {
+        const val SECTION_POLITICS = "politics"
+        const val SECTION_TECHNOLOGY = "technology"
+        const val SECTION_CULTURE = "culture"
+        const val TYPE_LIVE_BLOG = "liveblog"
+        const val TYPE_INTERACTIVE = "interactive"
+        const val TAG_ENVIRONMENT_RECYCLING = "environment/recycling"
+        const val TAG_POLITICS_BLOG = "politics/blog"
+    }
 }

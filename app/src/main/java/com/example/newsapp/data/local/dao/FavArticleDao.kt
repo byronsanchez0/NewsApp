@@ -1,11 +1,11 @@
-package com.example.newsapp.dao
+package com.example.newsapp.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.newsapp.entity.FavArticle
+import com.example.newsapp.data.local.entity.FavArticle
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -17,7 +17,7 @@ interface FavArticleDao {
     fun getAllIds(): Flow<List<String>>
 
     @Query("SELECT * FROM favorite WHERE itemId = :id")
-    fun getItemById(id: String): Flow<FavArticle>
+    fun getItemById(id: String): FavArticle
 
     @Query("DELETE FROM favorite")
     suspend fun deleteAllItems()

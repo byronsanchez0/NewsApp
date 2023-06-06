@@ -1,11 +1,11 @@
-package com.example.newsapp.database
+package com.example.newsapp.data.local.database
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.newsapp.dao.FavArticleDao
-import com.example.newsapp.entity.FavArticle
+import com.example.newsapp.data.local.dao.FavArticleDao
+import com.example.newsapp.data.local.entity.FavArticle
 
 @Database(entities = [FavArticle::class], version = 1)
 abstract class FavDataBase : RoomDatabase() {
