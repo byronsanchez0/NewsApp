@@ -156,13 +156,12 @@ fun SearchScreen(
                                 painter = painter,
                                 contentDescription = stringResource(R.string.new_image),
                                 modifier = Modifier
-                                    .height(100.dp)
-                                    .width(100.dp)
-                                    .padding(end = 16.dp),
-                                contentScale = ContentScale.Crop
+                                    .height(250.dp)
+                                    .width(350.dp)
+                                    .padding(horizontal = 30.dp),
+                                contentScale = ContentScale.FillWidth
                             )
                             if (article != null)
-
                                 Row {
                                     Text(
                                         text = article?.webTitle ?: "",

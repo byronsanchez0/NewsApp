@@ -34,9 +34,8 @@ class SearchViewModel(
     private val localRepository: FavRepo,
     private val guardianRepository: NewsRepository,
     private val dataStore: ProviderDataStore
-) : ViewModel() {
 
-    private val isLoading = MutableStateFlow(false)
+) : ViewModel() {
     private val searchQuery = MutableStateFlow("")
     private val favoritesIds = localRepository.getAllIds()
     private val favoritesIdsState = favoritesIds.stateIn(
@@ -95,7 +94,7 @@ class SearchViewModel(
             favoritesIds = favoritesIdsState,
             selectedFilter = filterPicked,
             saveSelectedFilter = ::saveFilterPicked
-            )
+        )
     )
 
 

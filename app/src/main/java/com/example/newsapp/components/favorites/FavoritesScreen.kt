@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.lerp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
-import com.example.newsapp.components.search.SearchUiState
 import com.example.newsapp.data.local.entity.FavArticle
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -85,10 +84,17 @@ fun Item(favArticle: FavArticle, favoritesViewModel: FavoritesViewModel, navHost
                 .fillMaxSize()
                 .clickable { navHostController.navigate("details/${url}") }
         )
+        Text(
+            text = favArticle?.title ?: "",
+            modifier = Modifier
+                .padding(8.dp),
+            softWrap = true
+        )
         FloatingActionButton(onClick = { favUiState.deleteFavArticle(favArticle.itemId) },
             content = {
                 Icon(imageVector = Icons.Outlined.Delete, contentDescription = "Delete")
-            }
+            },
+            modifier = Modifier.align(Alignment.BottomEnd)
         )
     }
 
